@@ -1,0 +1,7 @@
+Today I began building the actual thing.\
+start off by making a python venv on vsc
+
+pip install streamlit django gpt4all pandas langchain\
+pip install llama-cpp-python  # GPT4All과 함께 쓰기 위한 엔진\
+pip install python-dotenv  # API Key, 환경변수 관리\
+pip install streamlit-chat  # 채팅형 UI 구성용\
