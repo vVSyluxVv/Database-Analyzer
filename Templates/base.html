@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}DB 분석기{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>🧠 DB 분석기 프로젝트</h1>
+        <nav>
+            <a href="{% url 'home' %}">홈</a> |
+            <a href="{% url 'connect_db' %}">DB 연결</a> |
+            <a href="{% url 'select_table' %}">테이블 선택</a> |
+            <a href="{% url 'analyze' %}">AI 분석 결과</a>
+        </nav>
+    </header>
+    <hr>
+    <main>
+        {% block content %}
+        <!-- 각 페이지 컨텐츠 -->
+        {% endblock %}
+    </main>
+    <hr>
+    <footer>
+        <p>© 2025 DB Analyzer. All rights reserved.</p>
+    </footer>
+</body>
+</html>

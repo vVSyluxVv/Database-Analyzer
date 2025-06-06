@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}DB 연결{% endblock %}
+
+{% block content %}
+<h2>DB 연결하기</h2>
+<form method="post">
+    {% csrf_token %}
+    <label>DB 호스트: <input type="text" name="host"></label><br>
+    <label>DB 이름: <input type="text" name="dbname"></label><br>
+    <label>사용자 이름: <input type="text" name="user"></label><br>
+    <label>비밀번호: <input type="password" name="password"></label><br>
+    <button type="submit">연결</button>
+</form>
+{% endblock %}

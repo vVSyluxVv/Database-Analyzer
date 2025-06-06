@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}AI 분석 결과{% endblock %}
+
+{% block content %}
+<div style="display: flex;">
+    <div style="flex: 2; padding-right: 20px;">
+        <h2>AI 분석 결과</h2>
+        <table border="1" width="100%">
+            <tr>
+                <th>컬럼명</th>
+                <th>추론된 의미</th>
+                <th>데이터 타입</th>
+                <th>신뢰도</th>
+            </tr>
+            {% for column in columns %}
+            <tr>
+                <td>{{ column.name }}</td>
+                <td>{{ column.ai_description }}</td>
+                <td>{{ column.data_type }}</td>
+                <td>{{ column.confidence }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
+        <h2>GPT 추가 질문</h2>
+        <!-- GPT 채팅 박스 자리만 -->
+        <div style="width: 100%; height: 400px; border: 1px solid #ccc; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center;">
+            <p style="color: #999;">GPT 채팅창 (준비 중)</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
