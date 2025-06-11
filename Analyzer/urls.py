@@ -6,4 +6,6 @@ urlpatterns = [
     path('connect-db/', views.connect_db, name='connect_db'),
     path('select-table/', views.select_table, name='select_table'),
     path('analyze/', views.analyze, name='analyze'),
+    path('view-table/', views.view_table, name='view_table'),
+    path('dummy/', views.dummy)
 ]

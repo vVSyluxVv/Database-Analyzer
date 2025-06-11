@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}테이블 뷰어{% endblock %}
+
+{% block content %}
+<h2>테이블 조회</h2>
+
+<form method="get">
+    <label for="table">테이블 선택:</label>
+    <select name="table" id="table" onchange="this.form.submit()">
+        <option value="">-- 테이블 선택 --</option>
+        {% for table in tables %}
+            <option value="{{ table }}" {% if table == selected_table %}selected{% endif %}>{{ table }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if selected_table %}
+    <h3>{{ selected_table }}</h3>
+
+    <table border="1" width="100%" id="dataTable">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th onclick="sortTable({{ forloop.counter0 }})" style="cursor: pointer;">
+                    {{ col }}<br>
+                    <input type="text" onkeyup="filterTable({{ forloop.counter0 }}, this)" placeholder="검색">
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                {% for col in columns %}
+                <td>{{ row|get_item:col }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<script>
+// 컬럼별 필터링
+function filterTable(colIndex, input) {
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById("dataTable");
+    const tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName("td")[colIndex];
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+let sortDirection = {}; // 각 컬럼별 정렬 상태 저장
+
+function sortTable(colIndex) {
+    const table = document.getElementById("dataTable");
+    let switching = true;
+    let shouldSwitch, i;
+    let dir = sortDirection[colIndex] === "asc" ? "desc" : "asc";
+    sortDirection[colIndex] = dir;
+
+    while (switching) {
+        switching = false;
+        const rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            let x = rows[i].getElementsByTagName("TD")[colIndex];
+            let y = rows[i + 1].getElementsByTagName("TD")[colIndex];
+
+            if (dir === "asc") {
+                if (x.innerText.toLowerCase() > y.innerText.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir === "desc") {
+                if (x.innerText.toLowerCase() < y.innerText.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
+</script>
+
+{% endblock %}

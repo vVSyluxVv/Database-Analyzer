@@ -4,19 +4,28 @@
 
 {% block content %}
 <h2>새 프로젝트 생성</h2>
-<p>새로운 프로젝트를 시작해보세요.</p>
 <a href="{% url 'connect_db' %}">+ 새 프로젝트 시작하기</a>
 
 <hr>
 
 <h2>진행 중인 프로젝트</h2>
-{% comment %} 프로젝트 리스트가 있으면 보여주고 없으면 안내문 {% endcomment %}
 {% if projects %}
-    <ul>
+    <table border="1" width="100%">
+        <tr>
+            <th>DB 이름</th>
+            <th>생성일시</th>
+            <th>테이블 수</th>
+            <th>컬럼 수</th>
+        </tr>
         {% for project in projects %}
-        <li>{{ project.name }} (생성일: {{ project.created_at }})</li>
+        <tr>
+            <td>{{ project.db_name }}</td>
+            <td>{{ project.created_at|date:"ymd-H:i" }}</td>
+            <td>{{ project.table_count }}</td>
+            <td>{{ project.column_count }}</td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% else %}
     <p>현재 진행중인 프로젝트가 없습니다.</p>
 {% endif %}

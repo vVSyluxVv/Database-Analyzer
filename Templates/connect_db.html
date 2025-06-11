@@ -4,12 +4,18 @@
 
 {% block content %}
 <h2>DB 연결하기</h2>
+
 <form method="post">
     {% csrf_token %}
-    <label>DB 호스트: <input type="text" name="host"></label><br>
-    <label>DB 이름: <input type="text" name="dbname"></label><br>
-    <label>사용자 이름: <input type="text" name="user"></label><br>
-    <label>비밀번호: <input type="password" name="password"></label><br>
+    <label>DB 호스트: <input type="text" name="host" required></label><br>
+    <label>포트: <input type="number" name="port" value="3306" required></label><br>
+    <label>DB 이름: <input type="text" name="dbname" required></label><br>
+    <label>사용자 이름: <input type="text" name="user" required></label><br>
+    <label>비밀번호: <input type="password" name="password" required></label><br>
     <button type="submit">연결</button>
 </form>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
 {% endblock %}
