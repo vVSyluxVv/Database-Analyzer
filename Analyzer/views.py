@@ -79,14 +79,13 @@ def select_table(request):
         selected_tables = request.POST.getlist('selected_tables')
         selected_columns = request.POST.getlist('selected_columns')
 
-        if not selected_tables or not selected_columns:
-            return render(request, 'select_table.html', {'error': '테이블과 필드를 하나 이상 선택해주세요.'})
+        if not selected_columns:
+            return render(request, 'select_table.html', {'error': '필드를 하나 이상 선택해주세요.'})
 
-        # ✅ 선택된 테이블, 컬럼 세션에 저장
         request.session['selected_tables'] = selected_tables
         request.session['selected_columns'] = selected_columns
 
-        return redirect('analyze')  # AI 분석 결과 페이지로 이동
+        return redirect('analyze')
 
     # GET 요청 처리: 테이블 목록 가져오기
     try:
@@ -121,17 +120,21 @@ def select_table(request):
 
 def analyze(request):
     selected_tables = request.session.get('selected_tables', [])
-    selected_columns = request.session.get('selected_columns', [])
-
-    if not selected_tables or not selected_columns:
+    selected_columns = request.session.get('selected_columns')
+    if not selected_columns:
         return redirect('select_table')
 
     # 테이블별로 컬럼 정리
     columns_by_table = {}
     for col in selected_columns:
-        table_name, column_name = col.split('.', 1)
+        try:
+            table_name, column_name = col.split('.', 1)
+        except ValueError:
+            continue  # 포맷이 이상할 경우 스킵
+
         if table_name not in columns_by_table:
             columns_by_table[table_name] = []
+
         columns_by_table[table_name].append({
             'field': column_name,
             'ai_meaning': '',
