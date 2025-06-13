@@ -7,65 +7,71 @@
 <h2>테이블과 필드 선택</h2>
 
 <form method="post">
-    {% csrf_token %}
-    <div id="tableSelectSection">
-        {% for table, columns in columns_info.items %}
-            <div style="margin-bottom: 30px;">
-                <label>
-                    <input type="checkbox" class="table-checkbox" data-table="{{ table }}" name="selected_tables" value="{{ table }}">
-                    <strong>{{ table }}</strong>
-                </label>
-                <table border="1" width="100%" style="margin-top: 10px;">
-                    <thead>
-                        <tr>
-                            <th>선택</th>
-                            <th>필드 이름</th>
-                            <th>타입</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for column in columns %}
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="field-checkbox" data-table="{{ table }}" name="selected_columns" value="{{ table }}.{{ column.Field }}">
-                            </td>
-                            <td>{{ column.Field }}</td>
-                            <td>{{ column.Type }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endfor %}
-    </div>
+  {% csrf_token %}
 
-    <button type="submit">선택 완료</button>
+  <div id="tableSelectSection">
+    {% for table, columns in columns_info.items %}
+    <div style="margin-bottom: 30px;">
+      <label>
+        <input type="checkbox" class="table-checkbox" data-table="{{ table }}" name="selected_tables" value="{{ table }}">
+        <strong>{{ table }}</strong>
+      </label>
+      <table border="1" width="100%" style="margin-top: 10px;">
+        <thead>
+          <tr>
+            <th>선택</th>
+            <th>필드 이름</th>
+            <th>타입</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for column in columns %}
+          <tr>
+            <td>
+              <input type="checkbox" class="field-checkbox" data-table="{{ table }}" name="selected_columns" value="{{ table }}.{{ column.Field }}">
+            </td>
+            <td>{{ column.Field }}</td>
+            <td>{{ column.Type }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- 하단 프롬프트 입력 -->
+  <div style="margin-top: 40px;">
+    <h3>분석 지시사항 (옵션)</h3>
+    <textarea name="gpt_prompt" rows="5" style="width: 100%;" placeholder="예: 각 필드 간 상관관계를 분석하고 주요 특징을 요약해줘."></textarea>
+  </div>
+
+  <!-- 버튼 -->
+  <div style="margin-top: 20px;">
+    <button type="submit">선택완료 및 분석시작</button>
+  </div>
 </form>
 
 <script>
-    // 테이블 체크박스 클릭 시 필드 전체 선택/해제
-    document.querySelectorAll('.table-checkbox').forEach(function(tableCheckbox) {
-        tableCheckbox.addEventListener('change', function() {
-            const tableName = this.getAttribute('data-table');
-            const fieldCheckboxes = document.querySelectorAll('.field-checkbox[data-table="' + tableName + '"]');
-            fieldCheckboxes.forEach(function(cb) {
-                cb.checked = tableCheckbox.checked;
-            });
-        });
+  // 체크박스 연동 스크립트
+  document.querySelectorAll('.table-checkbox').forEach(function (tableCheckbox) {
+    tableCheckbox.addEventListener('change', function () {
+      const tableName = this.getAttribute('data-table');
+      const fieldCheckboxes = document.querySelectorAll('.field-checkbox[data-table="' + tableName + '"]');
+      fieldCheckboxes.forEach(function (cb) {
+        cb.checked = tableCheckbox.checked;
+      });
     });
+  });
 
-    // 필드 체크박스 개별 클릭 시 테이블 체크박스 상태 관리
-    document.querySelectorAll('.field-checkbox').forEach(function(fieldCheckbox) {
-        fieldCheckbox.addEventListener('change', function() {
-            const tableName = this.getAttribute('data-table');
-            const tableCheckbox = document.querySelector('.table-checkbox[data-table="' + tableName + '"]');
-            const allFields = document.querySelectorAll('.field-checkbox[data-table="' + tableName + '"]');
-
-            // 하나라도 체크 안 돼 있으면 테이블 체크박스 해제
-            const allChecked = Array.from(allFields).every(cb => cb.checked);
-            tableCheckbox.checked = allChecked;
-        });
+  document.querySelectorAll('.field-checkbox').forEach(function (fieldCheckbox) {
+    fieldCheckbox.addEventListener('change', function () {
+      const tableName = this.getAttribute('data-table');
+      const tableCheckbox = document.querySelector('.table-checkbox[data-table="' + tableName + '"]');
+      const allFields = document.querySelectorAll('.field-checkbox[data-table="' + tableName + '"]');
+      const allChecked = Array.from(allFields).every(cb => cb.checked);
+      tableCheckbox.checked = allChecked;
     });
+  });
 </script>
-
 {% endblock %}

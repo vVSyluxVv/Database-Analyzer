@@ -1,31 +1,50 @@
 {% extends "base.html" %}
-{% load static %}
-
 {% block title %}AI 분석 결과{% endblock %}
 
 {% block content %}
-<h2>AI 분석 결과</h2>
+<div style="display: flex; gap: 40px; align-items: flex-start;">
 
-{% for table, columns in columns_by_table.items %}
+  <!-- 좌측: 분석 결과 테이블 -->
+  <div style="flex: 2;">
+    <h2>AI 분석 결과</h2>
+    <div style="margin-top: 10px;">
+      <a href="{% url 'download_analysis' %}">
+        <button type="button">분석 결과 다운로드 (txt)</button>
+      </a>
+    </div>
+    {% for table, columns in columns_by_table.items %}
     <h3>{{ table }}</h3>
     <table border="1" width="100%" style="margin-bottom: 30px;">
-        <thead>
-            <tr>
-                <th>필드 이름</th>
-                <th>추정 의미</th>
-                <th>추론 이유</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for col in columns %}
-            <tr>
-                <td>{{ col.field }}</td>
-                <td>{{ col.ai_meaning }}</td>
-                <td>{{ col.ai_reason }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th>컬럼명</th>
+          <th>AI 추정 의미</th>
+          <th>GPT 추론 이유</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for col in columns %}
+        <tr>
+          <td>{{ col.field }}</td>
+          <td>{{ col.ai_meaning }}</td>
+          <td>{{ col.ai_reason }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-{% endfor %}
+    {% endfor %}
+  </div>
 
+  <!-- 우측: GPT 채팅창 -->
+  <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
+    <h3>추가 질문</h3>
+    <p>GPT에게 분석 결과에 대한 보충 설명이나 추가 분석을 요청해보세요.</p>
+
+    <form method="post" action="#">
+      <textarea rows="5" style="width: 100%;" placeholder="예: 이 결과가 어떤 의미인가요?"></textarea>
+      <button type="button" style="margin-top: 10px; width: 100%;">질문하기</button>
+    </form>
+  </div>
+
+</div>
 {% endblock %}

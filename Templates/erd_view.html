@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}데이터베이스 요약 및 ERD{% endblock %}
+
+{% block content %}
+<h2>📌 전체 데이터베이스 요약</h2>
+<p style="font-weight: bold;">{{ summary }}</p>
+
+<h3>📊 ERD 다이어그램 (ASCII)</h3>
+<pre style="background-color: #f4f4f4; padding: 20px; border: 1px solid #ccc;">
+{{ erd }}
+</pre>
+{% endblock %}
